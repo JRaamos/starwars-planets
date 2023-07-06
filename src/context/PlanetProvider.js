@@ -5,6 +5,7 @@ import UseContext from './UseContext';
 function PlanetProvider({ children }) {
   const [planets, setPlanets] = useState([]);
   const [filter, setFilter] = useState([]);
+  const [filterBool, setFilterBool] = useState(false);
 
   useEffect(() => {
     const fetchPlanets = async () => {
@@ -22,8 +23,10 @@ function PlanetProvider({ children }) {
       .toLowerCase().includes(name.toLowerCase()));
     setFilter(filterPlanetsName);
   };
+
   const filterPlanetsNumeric = ({ column, comparison, value }) => {
-    const filterPlanetsNumber = planets.filter((planet) => {
+    const filterPlanetsNumber = filter.filter((planet) => {
+      setFilterBool(true);
       switch (comparison) {
       case 'maior que':
         return Number(planet[column]) > Number(value);
