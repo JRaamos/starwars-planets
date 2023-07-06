@@ -2,9 +2,9 @@ import React, { useContext } from 'react';
 import UseContext from '../context/UseContext';
 
 function PopulateTable() {
-  const { planets } = useContext(UseContext);
+  const { filter } = useContext(UseContext);
   return (
-    planets.map((planet) => (
+    filter?.map((planet) => (
       <tr key={ planet.name }>
         <td>{ planet.name }</td>
         <td>{ planet.rotation_period }</td>
