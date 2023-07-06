@@ -5,7 +5,9 @@ function Table() {
   return (
     <div>
       <FormsTable />
-      <table>
+      <table
+        data-testid="planets"
+      >
         <thead>
           <tr>
             <th> Name </th>
