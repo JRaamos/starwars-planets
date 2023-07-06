@@ -4,7 +4,7 @@ import UseContext from '../context/UseContext';
 function PopulateTable() {
   const { filter } = useContext(UseContext);
   return (
-    filter?.map((planet) => (
+    filter.map((planet) => (
       <tr key={ planet.name }>
         <td>{ planet.name }</td>
         <td>{ planet.rotation_period }</td>
@@ -20,7 +20,6 @@ function PopulateTable() {
         <td>{ planet.edited }</td>
         <td>{ planet.url }</td>
       </tr>
-
     ))
 
   );

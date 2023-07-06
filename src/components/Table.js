@@ -1,19 +1,10 @@
-// import PopulateTable from './PopulateTable';
-
-import { useContext } from 'react';
+import FormsTable from './FormsTable';
 import PopulateTable from './PopulateTable';
-import UseContext from '../context/UseContext';
 
 function Table() {
-  const { filterPlanets } = useContext(UseContext);
-
   return (
     <div>
-      <input
-        data-testid="name-filter"
-        type="text"
-        onChange={ ({ target }) => filterPlanets(target.value) }
-      />
+      <FormsTable />
       <table>
         <thead>
           <tr>

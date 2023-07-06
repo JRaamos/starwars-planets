@@ -11,9 +11,8 @@ function PlanetProvider({ children }) {
       const response = await fetch('https://swapi.dev/api/planets');
       const { results } = await response.json();
       const planetsFilter = results.map((planet) => delete planet.residents && planet);
-      setPlanets(planetsFilter);
       setFilter(planetsFilter);
-      localStorage.setItem('planets', JSON.stringify(planetsFilter));
+      setPlanets(planetsFilter);
     };
     fetchPlanets();
   }, []);
@@ -22,11 +21,25 @@ function PlanetProvider({ children }) {
     const filterPlanetsName = planets.filter((planet) => planet.name
       .toLowerCase().includes(name.toLowerCase()));
     setFilter(filterPlanetsName);
-    return filterPlanetsName;
+  };
+  const filterPlanetsNumeric = ({ column, comparison, value }) => {
+    const filterPlanetsNumber = planets.filter((planet) => {
+      switch (comparison) {
+      case 'maior que':
+        return Number(planet[column]) > Number(value);
+      case 'menor que':
+        return Number(planet[column]) < Number(value);
+      case 'igual a':
+        return Number(planet[column]) === Number(value);
+      default:
+        return planet;
+      }
+    });
+    setFilter(filterPlanetsNumber);
   };
 
   return (
-    <UseContext.Provider value={ { planets, filter, filterPlanets } }>
+    <UseContext.Provider value={ { filter, filterPlanets, filterPlanetsNumeric } }>
       {children}
     </UseContext.Provider>
   );
