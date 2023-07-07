@@ -89,7 +89,45 @@ function FormsTable() {
         >
           Filtrar
         </button>
+        <button
+          type="button"
+          data-testid="button-remove-filters"
+          onClick={ () => {
+            setCondition(['population', 'orbital_period', 'diameter',
+              'rotation_period', 'surface_water']);
+            setActiveFilter([]);
+          } }
+        >
+          Limpar
+        </button>
       </form>
+      <span>
+        { activeFilter.map((item) => (
+          <div
+            key={ item.column }
+            data-testid="filter"
+          >
+            {' '}
+            { item.column }
+            {' '}
+            { item.comparison }
+            {' '}
+            { item.value }
+            {' '}
+            <button
+              type="button"
+              onClick={ () => {
+                setCondition([...condition, item.column]);
+                setActiveFilter(
+                  activeFilter.filter((filter) => filter.column !== item.column),
+                );
+              } }
+            >
+              x
+            </button>
+          </div>
+        ))}
+      </span>
     </div>
   );
 }
