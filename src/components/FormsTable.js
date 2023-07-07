@@ -1,26 +1,26 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import UseContext from '../context/UseContext';
 
 function FormsTable() {
-  const [filterComparison, setFilterComparison] = useState({
-    column: 'population',
-    comparison: 'maior que',
-    value: 0,
-  });
+  const { filterPlanets,
+    activeFilter, setActiveFilter } = useContext(UseContext);
 
-  const { filterPlanets, filterPlanetsNumeric } = useContext(UseContext);
-  const array = ['population', 'orbital_period', 'diameter',
-    'rotation_period', 'surface_water'];
-  const arrayDeCondicoes = ['maior que', 'menor que', 'igual a'];
+  const [filterComparison, setFilterComparison] = useState(
+    {
+      column: 'population',
+      comparison: 'maior que',
+      value: 0,
+    },
+  );
+  const [condition, setCondition] = useState(['population', 'orbital_period', 'diameter',
+    'rotation_period', 'surface_water']);
 
-  const handleChanges = ({ target }) => {
-    const { name, value } = target;
+  useEffect(() => {
     setFilterComparison({
       ...filterComparison,
-      [name]: value,
+      column: condition[0],
     });
-  };
-
+  }, [activeFilter]);
   return (
     <div>
       <form>
@@ -34,11 +34,12 @@ function FormsTable() {
           <select
             data-testid="column-filter"
             name="column"
-            onChange={ handleChanges }
-
+            value={ filterComparison.column }
+            onChange={ ({ target }) => setFilterComparison({
+              ...filterComparison, column: target.value }) }
           >
             {
-              array.map((item) => (
+              condition.map((item) => (
                 <option
                   key={ item }
                   value={ item }
@@ -53,15 +54,17 @@ function FormsTable() {
           <select
             data-testid="comparison-filter"
             name="comparison"
-            onChange={ handleChanges }
+            value={ filterComparison.comparison }
+            onChange={ ({ target }) => setFilterComparison({
+              ...filterComparison,
+              comparison: target.value }) }
           >
-            {arrayDeCondicoes.map((item) => (
+            { ['maior que', 'menor que', 'igual a'].map((item) => (
               <option
                 key={ item }
                 value={ item }
               >
                 { item }
-
               </option>
             ))}
           </select>
@@ -72,16 +75,19 @@ function FormsTable() {
             type="number"
             value={ filterComparison.value }
             name="value"
-            onChange={ handleChanges }
+            onChange={ ({ target }) => setFilterComparison({
+              ...filterComparison, value: target.value }) }
           />
         </label>
         <button
           type="button"
           data-testid="button-filter"
-          onClick={ () => filterPlanetsNumeric(filterComparison) }
+          onClick={ () => {
+            setActiveFilter([...activeFilter, filterComparison]);
+            setCondition(condition.filter((item) => item !== filterComparison.column));
+          } }
         >
           Filtrar
-
         </button>
       </form>
     </div>

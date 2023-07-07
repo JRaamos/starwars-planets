@@ -5,6 +5,7 @@ import UseContext from './UseContext';
 function PlanetProvider({ children }) {
   const [planets, setPlanets] = useState([]);
   const [filter, setFilter] = useState([]);
+  const [activeFilter, setActiveFilter] = useState([]);
 
   useEffect(() => {
     const fetchPlanets = async () => {
@@ -23,24 +24,34 @@ function PlanetProvider({ children }) {
     setFilter(filterPlanetsName);
   };
 
-  const filterPlanetsNumeric = ({ column, comparison, value }) => {
-    const filterPlanetsNumber = filter.filter((planet) => {
-      switch (comparison) {
-      case 'maior que':
-        return Number(planet[column]) > Number(value);
-      case 'menor que':
-        return Number(planet[column]) < Number(value);
-      case 'igual a':
-        return Number(planet[column]) === Number(value);
-      default:
-        return planet;
-      }
-    });
-    setFilter(filterPlanetsNumber);
-  };
+  useEffect(() => {
+    const filterPlanetsNumeric = () => {
+      const filterPlanetsNumber = planets.filter((planet) => (
+        activeFilter.every(({ column, comparison, value }) => {
+          switch (comparison) {
+          case 'maior que':
+            return Number(planet[column]) > Number(value);
+          case 'menor que':
+            return Number(planet[column]) < Number(value);
+          case 'igual a':
+            return Number(planet[column]) === Number(value);
+          default:
+            return planet;
+          }
+        })
+      ));
+      setFilter(filterPlanetsNumber);
+    };
+    filterPlanetsNumeric();
+  }, [activeFilter]);
 
   return (
-    <UseContext.Provider value={ { filter, filterPlanets, filterPlanetsNumeric } }>
+    <UseContext.Provider
+      value={ { filter,
+        filterPlanets,
+        activeFilter,
+        setActiveFilter } }
+    >
       {children}
     </UseContext.Provider>
   );
