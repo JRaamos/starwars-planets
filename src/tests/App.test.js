@@ -8,10 +8,13 @@ describe('I am your test', () => {
   beforeEach(() => {
     global.fetch = jest.fn(mockApi)
   })
-  it('renders a heading', () => {
-  render(<App />);
 
-  const inputName = screen.getByTestId('name-filter');
+  it('renders a heading', async () => {
+    render(<App />);
+    await waitFor(()=> {
+    screen.getByText('Alderaan');
+    }, { timeout: 3000 })
+    const inputName = screen.getByTestId('name-filter');
   const inputColumn = screen.getByTestId('column-filter');
   const inputComparison = screen.getByTestId('comparison-filter');
   const inputValue = screen.getByTestId('value-filter');
@@ -25,11 +28,23 @@ describe('I am your test', () => {
   expect(inputValue).toBeInTheDocument();
   expect(buttonFilter).toBeInTheDocument();
 
-  userEvent.type(inputName, 'Alderaan');
   userEvent.selectOptions(inputColumn, 'population');
   userEvent.selectOptions(inputComparison, 'maior que');
   userEvent.type(inputValue, '1000000');
   userEvent.click(buttonFilter);
 
-  });
+  const span = screen.getByTestId('filter');
+  expect(span).toBeInTheDocument();
+
+  userEvent.selectOptions(inputColumn, 'orbital_period');
+  userEvent.selectOptions(inputComparison, 'menor que');
+  userEvent.type(inputValue, '365');
+  userEvent.click(buttonFilter);
+
+  userEvent.selectOptions(inputColumn, 'diameter');
+  userEvent.selectOptions(inputComparison, 'igual a');
+  userEvent.type(inputValue, '402');
+  userEvent.click(buttonFilter);
+ });
+
 });
