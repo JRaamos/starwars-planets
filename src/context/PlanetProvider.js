@@ -50,7 +50,9 @@ function PlanetProvider({ children }) {
       value={ { filter,
         filterPlanets,
         activeFilter,
-        setActiveFilter } }
+        setActiveFilter,
+        setFilter,
+      } }
     >
       {children}
     </UseContext.Provider>

@@ -3,7 +3,8 @@ import UseContext from '../context/UseContext';
 
 function FormsTable() {
   const { filterPlanets,
-    activeFilter, setActiveFilter } = useContext(UseContext);
+    activeFilter, setActiveFilter, filter, setFilter } = useContext(UseContext);
+  const [filterName, setFilterName] = useState('');
 
   const [filterComparison, setFilterComparison] = useState(
     {
@@ -12,8 +13,16 @@ function FormsTable() {
       value: 0,
     },
   );
+
   const [condition, setCondition] = useState(['population', 'orbital_period', 'diameter',
     'rotation_period', 'surface_water']);
+
+  const [ordenacao, setOrdenacao] = useState(
+    {
+      column: 'population',
+      sort: 'ASC',
+    },
+  );
 
   useEffect(() => {
     setFilterComparison({
@@ -21,6 +30,16 @@ function FormsTable() {
       column: condition[0],
     });
   }, [activeFilter]);
+
+  // const filterOrdenacao = () => {
+  // const filterOrdenacaoNumber = filter.sort((a, b) => {
+  // if (ordenacao.sort === 'ASC') {
+  // return Number(a[ordenacao.column]) - Number(b[ordenacao.column]);
+  // }
+  // return Number(b[ordenacao.column]) - Number(a[ordenacao.column]);
+  // });
+  // setFilter(filterOrdenacaoNumber);
+  // };
   return (
     <div>
       <form>
@@ -28,7 +47,11 @@ function FormsTable() {
           placeholder="Digite o nome do planeta"
           data-testid="name-filter"
           type="text"
-          onChange={ ({ target }) => filterPlanets(target.value) }
+          value={ filterName }
+          onChange={ ({ target }) => {
+            setFilterName(target.value);
+            filterPlanets(target.value);
+          } }
         />
         <label>
           <select
@@ -85,6 +108,7 @@ function FormsTable() {
           onClick={ () => {
             setActiveFilter([...activeFilter, filterComparison]);
             setCondition(condition.filter((item) => item !== filterComparison.column));
+            setFilterComparison({ ...filterComparison, value: 0 });
           } }
         >
           Filtrar
@@ -96,38 +120,85 @@ function FormsTable() {
             setCondition(['population', 'orbital_period', 'diameter',
               'rotation_period', 'surface_water']);
             setActiveFilter([]);
+            setFilterName('');
           } }
         >
           Limpar
         </button>
-      </form>
-      <span>
-        { activeFilter.map((item) => (
-          <div
-            key={ item.column }
-            data-testid="filter"
-          >
-            {' '}
-            { item.column }
-            {' '}
-            { item.comparison }
-            {' '}
-            { item.value }
-            {' '}
-            <button
-              type="button"
-              onClick={ () => {
-                setCondition([...condition, item.column]);
-                setActiveFilter(
-                  activeFilter.filter((filter) => filter.column !== item.column),
-                );
-              } }
+        <span>
+          { activeFilter.map((item) => (
+            <div
+              key={ item.column }
+              data-testid="filter"
             >
-              x
-            </button>
-          </div>
-        ))}
-      </span>
+              {`${item.column} ${item.comparison} ${item.value}`}
+              <button
+                type="button"
+                onClick={ () => {
+                  setCondition([...condition, item.column]);
+                  setActiveFilter(
+                    activeFilter.filter((filters) => filters.column !== item.column),
+                  );
+                } }
+              >
+                x
+              </button>
+            </div>
+          ))}
+        </span>
+        <section>
+          <label>
+            <select
+              onChange={ ({ target }) => setOrdenacao({
+                ...ordenacao, column: target.value }) }
+              data-testid="column-sort"
+            >
+              {
+                ['population', 'orbital_period', 'diameter',
+                  'rotation_period', 'surface_water']
+                  .map((column) => (
+                    <option
+                      key={ column }
+                      value={ column }
+                    >
+                      { column }
+                    </option>
+                  ))
+              }
+            </select>
+          </label>
+          <label>
+            ascendente
+            <input
+              data-testid="column-sort-input-asc"
+              type="radio"
+              name="sort"
+              value="ASC"
+              checked={ ordenacao.sort === 'ASC' }
+            //  onChange={ ({ target }) => setOrdenacao({
+              //  ...ordenacao, sort: target.value }) }
+            />
+          </label>
+          <label>
+            descendente
+            <input
+              data-testid="column-sort-input-desc"
+              type="radio"
+              name="sort"
+              value="DESC"
+              checked={ ordenacao.sort === 'DESC' }
+              onChange={ ({ target }) => setOrdenacao({
+                ...ordenacao, sort: target.value }) }
+            />
+          </label>
+          <button
+            data-testid="column-sort-button"
+            type="button"
+          >
+            ordena
+          </button>
+        </section>
+      </form>
     </div>
   );
 }

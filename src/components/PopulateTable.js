@@ -6,7 +6,7 @@ function PopulateTable() {
   return (
     filter.map((planet) => (
       <tr key={ planet.name }>
-        <td>{ planet.name }</td>
+        <td data-testid="planet-name">{ planet.name }</td>
         <td>{ planet.rotation_period }</td>
         <td>{ planet.orbital_period }</td>
         <td>{ planet.diameter }</td>
@@ -21,7 +21,6 @@ function PopulateTable() {
         <td>{ planet.url }</td>
       </tr>
     ))
-
   );
 }
 
