@@ -3,7 +3,11 @@ import UseContext from '../context/UseContext';
 
 function FormsTable() {
   const { filterPlanets,
-    activeFilter, setActiveFilter, filter, setFilter } = useContext(UseContext);
+    activeFilter,
+    setActiveFilter,
+    // filter,
+    // setFilter
+  } = useContext(UseContext);
   const [filterName, setFilterName] = useState('');
 
   const [filterComparison, setFilterComparison] = useState(

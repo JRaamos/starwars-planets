@@ -3,7 +3,6 @@ import { render, screen, waitFor } from '@testing-library/react';
 import App from '../App';
 import userEvent from '@testing-library/user-event';
 import { mockApi } from './mock';
-import { act } from 'react-dom/test-utils';
 
 describe('I am your test', () => {
   beforeEach(() => {
